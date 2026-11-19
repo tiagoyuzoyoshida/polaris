@@ -42,7 +42,7 @@ Precedence when files conflict: `AGENT.md` hard rules, then `PROJECT.md`, then `
 | Human | n/a | `PROJECT.md`, the Brief in `TASKS.md`, `DEBRIEF.md`, `LOGS.md`, `SYSTEM.md` | `PROJECT.md`, approvals, direction |
 | Planner | Capable model, medium–high thinking | `PROJECT.md`, `MEMORY.md` (+ only scope-matching notes in `memory/`), `LATER.md`, recent `LOGS.md` entries, `TASKS.md`, diffs and targeted code | Plans, reviews, `LATER.md` |
 | Coder | Fast/mid model, medium thinking | `AGENT.md`, `TASKS.md`, section 7 of this file, and only the code and `memory/` notes named in `TASKS.md` | Code, tests, docs, the Report |
-| Aide | Cheap/fast model, low thinking (used by default) | Codebase and loop files as directed by the planner | Compact exploration summaries, deep-dive answers, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `MEMORY.md`, `memory/` notes |
+| Aide | Cheap/fast model, low thinking | Codebase and loop files as directed by the planner | Compact exploration summaries, deep-dive answers, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `MEMORY.md`, `memory/` notes |
 
 The planner writes no production code. The coder writes no plans. The aide writes no production code, plans, or review verdicts. Both the coder and the aide are launched as fresh sessions (6.6) so neither carries stale context and heavy reading never bloats the planner's context.
 
@@ -83,7 +83,7 @@ A cycle delivers one coherent, reviewable capability. If a plan needs more than 
 
 ## 5. Human entry points
 
-The human acts at exactly three points. Everything else runs without them. The human's direction sets how far the planner advances, as a milestone from `PROJECT.md` section 7. If the direction sets none, the planner asks which one before planning.
+The human acts at three loop points (plus choosing the coder and aide when unset, 6.6). Everything else runs without them. The human's direction sets how far the planner advances, as a milestone from `PROJECT.md` section 7. If the direction sets none, the planner asks which one before planning.
 
 ### 5.1 Found (once per project)
 
@@ -161,9 +161,9 @@ Human understanding and agent memory are separated so neither bloats the other. 
 
 ### 6.6 Launch the coder and aide
 
-Both the **coder** (medium thinking / fast-mid model) and the **aide** (low thinking / cheap-fast model) are default roles in the loop.
+Both the **coder** (recommended: fast/mid model, medium thinking) and the **aide** (recommended: cheap/fast model, low thinking) are core roles in the loop, **but choosing which tool, model, and thinking level each role uses is always the human's decision — never the planner's.** The planner must never silently pick or assume a tool, model, or thinking level for either role, including when launching an aide for initial codebase exploration (5.1) or planning (6.1).
 
-1. **Choose once.** Each role's tool (a native subagent, or a session of another tool that the planner can launch), model, and thinking level are recorded in the `Coder` and `Aide` rows of the `TASKS.md` header. The planner asks the human, with a recommendation, and waits, only when a row is blank, a recorded role cannot be launched, or the human asks to switch. It then writes the answer to the row. An opener that names a coder or aide sets the row without a question. Before launching a newly recorded role, the planner confirms with a trivial check that it can be launched, and states the permission mode it will run with.
+1. **Human chooses once.** Each role's tool (a native subagent, or a session of another tool that the planner can launch), model, and thinking level are recorded in the `Coder` and `Aide` rows of the `TASKS.md` header. When a row is blank, still holds its `<...>` placeholder, cannot be launched, or the human asks to switch, the planner **must** ask the human (with a recommendation) and wait before launching that role, then write the human's answer to the row. Once a role is recorded and working, the planner reuses it without asking again unless it cannot be launched or the human asks to switch. An opener that names a coder or aide sets the row without a question. Before launching a newly recorded role, the planner confirms with a trivial check that it can be launched, and states the permission mode it will run with.
 2. **Launch fresh.** Every coder and aide launch is a new subagent or headless session with empty context, never a fork, started in the project root. Every launch is fresh, including after `BLOCKED` or rework, so no tokens are spent carrying earlier sessions. One coder runs at a time. If no subagent or external tool can be launched from the planner's tool, the planner gives the human the corresponding opener from section 3 and waits.
 3. **Planner context hygiene.** The planner runs continuously across cycles within a milestone (preserving autonomy and prompt-cache reuse) while offloading heavy exploration, execution, and close-doc writing to fresh aide and coder sessions. Start a fresh planner session at each milestone boundary (or compact context if a single milestone exceeds about four to five cycles).
 4. **Act on the returned coder status.** `REPORTED`: review (6.2). `BLOCKED`: resolve (6.3). Rework or a corrected plan sets `APPROVED`, and the planner launches a new coder.

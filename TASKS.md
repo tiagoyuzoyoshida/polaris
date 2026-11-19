@@ -6,8 +6,8 @@
 | Milestone | <ID and name from PROJECT.md section 7> |
 | Planned | <YYYY-MM-DD> |
 | Revision | 1 |
-| Coder | <tool, model, and thinking level, set at the first launch> |
-| Aide | <tool, model, and thinking level, set at the first launch> |
+| Coder | <unset — human chooses before first launch: tool, model, and thinking level> |
+| Aide | <unset — human chooses before first launch: tool, model, and thinking level> |
 
 ## 1. Brief
 

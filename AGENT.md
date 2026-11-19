@@ -18,12 +18,13 @@ Universal rules for writing code in any repository. They say nothing about what 
 
 ## 2. Method
 
-1. **Orient first.** Read the layout, the project files, the nearest similar code, its tests, and the tooling config before writing anything.
-2. **Match the codebase.** New code is indistinguishable from the best existing code around it: same error handling, naming, structure, and test style.
-3. **Reuse before creating.** Search for an existing function, type, or pattern first. A new file, abstraction, dependency, or directory needs a concrete reason.
-4. **No dependency** for what the standard library or the existing stack already provides. Constrain versions the way the project does.
-5. **Fix causes, not symptoms.** A bug fix starts with a test that reproduces the bug, then removes its cause.
-6. **Make the smallest change that fully solves the problem,** then stop. No speculative flexibility or unrequested configurability. If 200 lines could be 50, rewrite it; ask whether a senior engineer would call it overcomplicated.
+1. **User value is the primary metric.** Software exists to serve its user, not to showcase cleverness, abstraction, or architectural purity. Every design choice, dependency, and optimization is justified by tangible user value: correctness, speed, reliability, or simplicity.
+2. **Orient first.** Read the layout, the project files, the nearest similar code, its tests, and the tooling config before writing anything.
+3. **Match the codebase.** New code is indistinguishable from the best existing code around it: same error handling, naming, structure, and test style.
+4. **Reuse before creating.** Search for an existing function, type, or pattern first. A new file, abstraction, dependency, or directory needs a concrete reason.
+5. **No dependency** for what the standard library or the existing stack already provides. Constrain versions the way the project does.
+6. **Fix causes, not symptoms.** A bug fix starts with a test that reproduces the bug, then removes its cause.
+7. **Make the smallest change that fully solves the problem,** then stop. No speculative flexibility or unrequested configurability. If 200 lines could be 50, rewrite it; ask whether a senior engineer would call it overcomplicated.
 
 ## 3. Design
 
@@ -36,7 +37,10 @@ Universal rules for writing code in any repository. They say nothing about what 
 7. **Handle errors where you can act on them.** Catch narrowly, add context, re-raise what you cannot handle. Release resources deterministically (`with`, `defer`, RAII, `finally`).
 8. **Explicit and deterministic.** No hidden global state, import side effects, or action at a distance. Randomness is seeded, and results are reproducible from committed inputs.
 9. **Minimal public surface.** Everything is private until something outside needs it. Public names and module paths are stable.
-10. **Performance follows measurement.** Avoid plainly wasteful complexity, optimize only what a measurement indicts, and record the measurement where the optimization lives.
+10. **Match data structures and algorithms to the access pattern.** Choose representations and complexity that fit the problem's scale and operations; avoid accidental quadratic work or repeated scans where a direct lookup or single pass suffices.
+11. **Do no unnecessary work.** Keep hot paths lean: avoid redundant passes, recomputed invariants, gratuitous copies, and avoidable allocations.
+12. **Respect boundary and locality costs.** Crossing I/O, network, or process boundaries dominates runtime; batch boundary crossings and keep tight loops local and predictable.
+13. **Measure before adding complexity.** Write structurally efficient code by default; for non-obvious or complexity-adding optimizations, profile first, optimize only what the measurement indicts, and record the measurement at the site.
 
 ## 4. Code
 
