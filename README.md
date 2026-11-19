@@ -5,8 +5,8 @@ An agent workflow for automating implementation with AI coding agents.
 ## Benefits
 
 - **Intelligence where it is needed.** A capable model plans and reviews, a fast model executes code, and a low-thinking aide handles read-only exploration, deep-dive questions, and documentation updates.
-- **Low-context by design.** Agents navigate codebase knowledge through a compact `MEMORY.md` catalog and open only the notes relevant to the current cycle, keeping context lean and quality high.
-- **You understand what the agents are doing.** Every decision is written down before code exists, `SYSTEM.md` gives you a visual Mermaid overview, each finished cycle comes with a short debrief, and a timeline records how the project got here.
+- **Low-context by design.** Agents navigate codebase knowledge through a compact memory catalog and open only the notes relevant to the current cycle, keeping context lean and quality high.
+- **You understand what the agents are doing.** Every decision is written down before code exists, a visual Mermaid overview shows how the system works, each finished cycle comes with a short debrief, and a timeline records how the project got here.
 - **The project stays reliable.** Every plan is checked against a project contract you approved, and the planner reviews the repository itself, not the coder's report.
 - **Autonomy up to a milestone.** You choose how far the planner goes, as a milestone of your roadmap. It runs on its own up to that point and stops only for decisions that are yours.
 
