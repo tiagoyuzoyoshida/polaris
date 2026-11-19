@@ -68,7 +68,7 @@
 
 ## 9. Project definition of done
 
-<Checks specific to this project, in addition to `AGENT.md` section 7.>
+<Checks specific to this project, in addition to `AGENT.md` section 9.>
 
 ## 10. Amendments
 

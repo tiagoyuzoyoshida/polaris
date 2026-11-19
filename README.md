@@ -4,8 +4,9 @@ An agent workflow for automating implementation with AI coding agents.
 
 ## Benefits
 
-- **Intelligence where it is needed.** A capable model plans and reviews, and cheaper models execute.
-- **You understand what the agents are doing.** Every decision is written down before code exists, each finished cycle comes with a short debrief, and a timeline records how the project got here.
+- **Intelligence where it is needed.** A capable model plans and reviews, a fast model executes code, and a low-thinking aide handles read-only exploration, deep-dive questions, and documentation updates.
+- **Low-context by design.** Agents navigate codebase knowledge through a compact `MEMORY.md` catalog and open only the notes relevant to the current cycle, keeping context lean and quality high.
+- **You understand what the agents are doing.** Every decision is written down before code exists, `SYSTEM.md` gives you a visual Mermaid overview, each finished cycle comes with a short debrief, and a timeline records how the project got here.
 - **The project stays reliable.** Every plan is checked against a project contract you approved, and the planner reviews the repository itself, not the coder's report.
 - **Autonomy up to a milestone.** You choose how far the planner goes, as a milestone of your roadmap. It runs on its own up to that point and stops only for decisions that are yours.
 
@@ -34,7 +35,7 @@ Send the same message at the start of every session. The planner reads the state
 - anything that would change the project's direction, such as an amendment to `PROJECT.md`,
 - the end of the milestone, where you review the result and say what comes next.
 
-The planner asks which tool and model to use as the coder the first time it needs one, and it can call a tool other than its own, for example Claude Code launching a coder in Antigravity, or the reverse.
+The planner asks which tool, model, and thinking level to use for the **coder** and **aide** the first time each is needed, and it can call a tool other than its own, for example Claude Code launching a coder in Antigravity, or the reverse.
 
 ## The files
 
@@ -45,11 +46,12 @@ The planner asks which tool and model to use as the coder the first time it need
 | `PROJECT.md` | The agreement you approve at the start: what the project is for, its architecture, the rules every change must respect, and the roadmap of milestones. |
 | `TASKS.md` | The cycle in progress: the plan the coder follows, its report, and the planner's review. Its status says whose move it is. |
 | `LATER.md` | The backlog: problems, ideas and open questions found along the way that are not part of the current cycle, in priority order. |
-| `SYSTEM.md` | How the system works today, as found in the code: its components, data and flows. Read this to understand the project. |
+| `MEMORY.md` | Agent memory catalog indexing `polaris/memory/` (created on first write): non-obvious conventions, contracts, and gotchas loaded only when relevant. |
+| `SYSTEM.md` | Visual, plain-language overview of how the system works today (with Mermaid diagrams). Read this to understand the project at a glance. |
 | `DEBRIEF.md` | What the last cycle did and why, in plain language, with a TL;DR first. Read this after a cycle. |
 | `LOGS.md` | A short timeline of every cycle: what each delivered and how smoothly it went. Read this to see how the project progressed. |
 
-`POLARIS.md` and `AGENT.md` are Polaris itself. The other six are specific to your project, and the loop fills them in as it goes.
+`POLARIS.md` and `AGENT.md` are Polaris itself. The other seven files (and `memory/` as it grows) are specific to your project, and the loop fills them in as it goes.
 
 ## License
 

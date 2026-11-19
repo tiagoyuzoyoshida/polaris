@@ -6,7 +6,8 @@
 | Milestone | <ID and name from PROJECT.md section 7> |
 | Planned | <YYYY-MM-DD> |
 | Revision | 1 |
-| Coder | <tool and model, set at the first launch> |
+| Coder | <tool, model, and thinking level, set at the first launch> |
+| Aide | <tool, model, and thinking level, set at the first launch> |
 
 ## 1. Brief
 
@@ -28,6 +29,7 @@
 - **Advances:** <milestone, and which part of its acceptance>
 - **Invariants at stake:** <IDs from PROJECT.md section 5, and how the plan protects each>
 - **LATER items addressed:** <IDs, or `None`>
+- **Memory to read:** <paths under `polaris/memory/` relevant to this cycle, or `None`>
 - **Existing code to follow:** <paths of the nearest similar code and its tests>
 
 ## 4. Scope

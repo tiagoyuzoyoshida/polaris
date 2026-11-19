@@ -1,6 +1,6 @@
 # DEBRIEF.md: Cycle <N>, <title>
 
-The explanation of the last closed cycle, written by the planner for the human under `POLARIS.md` section 6.5 after reviewing the coder's work. Rewritten at every close. Earlier debriefs are not kept: the history of all cycles is in `LOGS.md`. Natural language at the level of system logic: no code, and component names as they appear in `SYSTEM.md`.
+The explanation of the last closed cycle, written by the aide (under planner direction) for the human under `POLARIS.md` section 6.5 after the review is accepted. Rewritten at every close. Earlier debriefs are not kept: the history of all cycles is in `LOGS.md`. Natural language at the level of system logic: no code, and part names as they appear in `SYSTEM.md`.
 
 | | |
 |---|---|
@@ -25,4 +25,4 @@ The explanation of the last closed cycle, written by the planner for the human u
 
 ## 5. Decisions
 
-<Decisions made this cycle by the human or the planner, each with where it is durably recorded (a `SYSTEM.md` section, a decision record, or a `PROJECT.md` amendment), or `None`.>
+<Decisions made this cycle by the human or the planner, each with where it is durably recorded (a `memory/` note, a decision record, or a `PROJECT.md` amendment), or `None`.>

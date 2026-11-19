@@ -7,14 +7,14 @@ Universal rules for writing code in any repository. They say nothing about what 
 ## 1. Hard rules
 
 1. **Verify, never assume.** Do not invent APIs, flags, paths, signatures, or results. Read the source or the docs, or run the code. Nothing is done until section 9 has been executed. Say plainly what you could not verify.
-2. **Stay in scope.** Change only what the task requires. No drive-by refactors, renames, reformatting, or unrequested features. Report adjacent problems and leave them alone.
+2. **Stay in scope.** Change only what the task requires. No drive-by refactors, renames, reformatting, or unrequested features. Every changed line must trace directly to the task. Report adjacent problems and pre-existing dead code instead of touching them.
 3. **Fail loudly.** Never swallow an error, substitute a silent default, or return a placeholder when an invariant breaks. Raise a specific, actionable error.
 4. **Never weaken a check to pass it.** Do not delete, skip, loosen, or mock away a failing test, lint rule, or type error. Fix the cause or report it.
 5. **One source of truth.** Every fact, constant, and piece of logic lives in one place, and everything else refers to it. A change that makes a doc stale fixes or deletes that doc in the same change.
-6. **Leave no debris.** No scratch files, debug output, commented-out code, dead branches, unused parameters, or `_old`/`_v2` copies. Version control holds history.
+6. **Leave no debris.** No scratch files, debug output, commented-out code, dead branches, unused parameters, or `_old`/`_v2` copies. Remove imports, variables, and functions that your changes made unused, without deleting pre-existing dead code. Version control holds history.
 7. **No secrets or machine-specific values in the repo.** No credentials, tokens, hosts, absolute paths, or user settings. Use documented configuration and environment variables.
 8. **Confirm before destroying.** Deleting data, rewriting history, force-pushing, or removing files you did not create requires explicit approval.
-9. **Stop when a wrong guess is costly.** If the task is ambiguous and a wrong reading is expensive to undo, ask. Otherwise take the simplest reading and state the assumption.
+9. **Think before coding.** State assumptions explicitly and surface tradeoffs. If multiple interpretations exist, present them instead of picking silently. If something is unclear or a wrong guess is costly to undo, stop and ask. Otherwise take the simplest reading and state the assumption.
 
 ## 2. Method
 
@@ -23,7 +23,7 @@ Universal rules for writing code in any repository. They say nothing about what 
 3. **Reuse before creating.** Search for an existing function, type, or pattern first. A new file, abstraction, dependency, or directory needs a concrete reason.
 4. **No dependency** for what the standard library or the existing stack already provides. Constrain versions the way the project does.
 5. **Fix causes, not symptoms.** A bug fix starts with a test that reproduces the bug, then removes its cause.
-6. **Make the smallest change that fully solves the problem,** then stop.
+6. **Make the smallest change that fully solves the problem,** then stop. No speculative flexibility or unrequested configurability. If 200 lines could be 50, rewrite it; ask whether a senior engineer would call it overcomplicated.
 
 ## 3. Design
 
@@ -99,7 +99,7 @@ Run the project's own commands. If none exist, say so and do not guess.
 2. Type check, where the language or project has one: zero errors.
 3. Tests: all green, including the new ones.
 4. Docs: every trigger in 8.7 present in the diff has its docs change, and the README example still runs.
-5. Diff: read `git status` and `git diff` line by line. Nothing from section 5, nothing out of scope, no secrets.
+5. Diff: read `git status` and `git diff` line by line. Every changed line traces directly to the task; nothing from section 5, nothing out of scope, no secrets.
 
 Resolve every warning you introduced.
 

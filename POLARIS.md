@@ -7,8 +7,9 @@ This file defines how work happens in this repository: who acts, in what order, 
 Every decision is made once, by the highest level able to make it, and written down before code is written.
 
 - The **human** decides what to build and why.
-- The **planner** decides how, completely.
+- The **planner** decides how, completely, and owns every review verdict.
 - The **coder** executes, and decides nothing that the plan and `AGENT.md` do not already settle.
+- The **aide** explores codebases, answers deep-dive questions, and maintains documentation and memory notes at low thinking cost, without making architectural decisions or writing production code.
 
 A decision that reaches a level below the one it belongs to is a defect in the plan. The lower level reports it and does not improvise.
 
@@ -21,15 +22,16 @@ A decision that reaches a level below the one it belongs to is a defect in the p
 | `PROJECT.md` | Direction: purpose, architecture, invariants, roadmap | Planner drafts, human approves | Frozen, changed only by amendment (section 9) |
 | `TASKS.md` | Present: the current cycle's plan, checklist, report, review | Planner (plan, review), coder (checkboxes, report, status) | Rewritten every cycle |
 | `LATER.md` | Future: prioritized backlog | Planner | Living |
-| `SYSTEM.md` | Reality: the design of the system as built | Planner | Living, updated at every close |
-| `DEBRIEF.md` | Past: what the last closed cycle did, explained for the human | Planner | Rewritten at every close |
-| `LOGS.md` | History: a timeline of every closed cycle, a few lines each | Planner | Append-only, one entry per cycle, never edited |
+| `MEMORY.md` | Agent memory catalog: index of `polaris/memory/` | Aide (under planner direction) | Living, updated at close for affected paths |
+| `SYSTEM.md` | Human overview: visual Mermaid map and flows of the system as built | Aide (under planner direction) | Living, updated at every close |
+| `DEBRIEF.md` | Past: what the last closed cycle did, explained for the human | Aide (under planner direction) | Rewritten at every close |
+| `LOGS.md` | History: a timeline of every closed cycle, a few lines each | Aide (under planner direction) | Append-only, one entry per cycle, never edited |
 
-The section headings of `PROJECT.md`, `TASKS.md`, `LATER.md`, `SYSTEM.md`, and `DEBRIEF.md`, and the entry format of `LOGS.md`, are fixed and identical in every project. Only the content under them changes. Text in `<angle brackets>` is a placeholder for content not yet written. A fact lives in exactly one file.
+The section headings of `PROJECT.md`, `TASKS.md`, `LATER.md`, `MEMORY.md`, `SYSTEM.md`, and `DEBRIEF.md`, and the entry format of `LOGS.md`, are fixed and identical in every project. Only the content under them changes. Text in `<angle brackets>` is a placeholder for content not yet written. A fact lives in exactly one file.
 
 **Location.** The kit is a clone of its repository in the directory `polaris/` at the root of the project repository. Every bare file name in these files, `AGENT.md` included, means that file inside `polaris/`. A path such as `docs/` or `src/` is relative to the project root. `polaris/` is listed in the project's `.gitignore`, so no loop file enters the project's history (section 10).
 
-The layout is part of the loop. No agent adds, removes, renames, moves, or reorders any of these eight files or any of their headings, and no agent edits `POLARIS.md` or `AGENT.md` at all. A layout that seems inadequate is raised with the human as an escalation, never worked around. The kit's repository holds the pristine files, and a damaged layout is restored from it with git.
+The layout is part of the loop. No agent adds, removes, renames, moves, or reorders any of these nine files or any of their headings, and no agent edits `POLARIS.md` or `AGENT.md` at all. The sole exception is `polaris/memory/`, which starts empty (created on first write) and where the aide or planner may freely create, organize into nested subdirectories, update, and prune `.md` notes indexed by `MEMORY.md`. A layout that seems inadequate is raised with the human as an escalation, never worked around. The kit's repository holds the pristine files, and a damaged layout is restored from it with git.
 
 Precedence when files conflict: `AGENT.md` hard rules, then `PROJECT.md`, then `TASKS.md`, then `AGENT.md` defaults. A conflict between `TASKS.md` and anything above it is a stop condition (section 7.3), never a judgment call.
 
@@ -38,19 +40,21 @@ Precedence when files conflict: `AGENT.md` hard rules, then `PROJECT.md`, then `
 | Role | Runs on | Reads | Produces |
 |---|---|---|---|
 | Human | n/a | `PROJECT.md`, the Brief in `TASKS.md`, `DEBRIEF.md`, `LOGS.md`, `SYSTEM.md` | `PROJECT.md`, approvals, direction |
-| Planner | A capable model, chosen by the human | Everything, including the code | Plans, reviews, `LATER.md`, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md` |
-| Coder | A fast, cheaper model, launched by the planner | `AGENT.md`, `PROJECT.md`, `SYSTEM.md`, `TASKS.md`, sections 7 and 2 of this file, the code | Code, tests, docs, the Report |
+| Planner | Capable model, medium–high thinking | `PROJECT.md`, `MEMORY.md` (+ only scope-matching notes in `memory/`), `LATER.md`, recent `LOGS.md` entries, `TASKS.md`, diffs and targeted code | Plans, reviews, `LATER.md` |
+| Coder | Fast/mid model, medium thinking | `AGENT.md`, `TASKS.md`, section 7 of this file, and only the code and `memory/` notes named in `TASKS.md` | Code, tests, docs, the Report |
+| Aide | Cheap/fast model, low thinking (used by default) | Codebase and loop files as directed by the planner | Compact exploration summaries, deep-dive answers, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `MEMORY.md`, `memory/` notes |
 
-The planner writes no production code. The coder writes no plans. The planner launches every coder as a fresh session (6.6), so the coder starts with only the written plan and cannot inherit unwritten context.
+The planner writes no production code. The coder writes no plans. The aide writes no production code, plans, or review verdicts. Both the coder and the aide are launched as fresh sessions (6.6) so neither carries stale context and heavy reading never bloats the planner's context.
 
 Session openers:
 
 ```text
 Human to planner:  Follow polaris/POLARIS.md.
 Planner to coder:  Act as the coder defined in polaris/POLARIS.md. Execute polaris/TASKS.md.
+Planner to aide:   Act as the aide defined in polaris/POLARIS.md. Task: <specific read-only lookup, question, or close-doc update>.
 ```
 
-A session told to follow `polaris/POLARIS.md` without being told it is the coder is the planner. The opener carries no state and no direction: the planner derives where the project stands from the files (section 4), says so in a line, and asks the human for whatever it needs next, whether that is a description of what to implement, how far to advance, or the answer to a pending decision. The human may add any of these to the opener, including `Coder: <tool and model>` to choose the coder in advance (6.6).
+A session told to follow `polaris/POLARIS.md` without being told it is the coder or aide is the planner. The opener carries no state and no direction: the planner derives where the project stands from the files (section 4), says so in a line, and asks the human for whatever it needs next, whether that is a description of what to implement, how far to advance, or the answer to a pending decision. The human may add any of these to the opener, including `Coder: <tool, model, thinking>` and `Aide: <tool, model, thinking>` to choose them in advance (6.6).
 
 ## 4. The loop
 
@@ -83,13 +87,13 @@ The human acts at exactly three points. Everything else runs without them. The h
 
 ### 5.1 Found (once per project)
 
-The planner opens by asking what you want to implement. Describe it, or what you want to change in an existing project. This is a conversation: the planner asks what it needs, raises options and trade-offs, and drafts `PROJECT.md` only when you say you are clear about what will be built. It revises the draft until you approve. From then on `PROJECT.md` is frozen.
+The planner opens by asking what you want to implement. Describe it, or what you want to change in an existing project. This is a conversation: the planner states its assumptions explicitly, surfaces options, trade-offs, and multiple interpretations rather than picking silently, pushes back when a simpler approach exists, and drafts `PROJECT.md` only when you say you are clear about what will be built. It revises the draft until you approve. From then on `PROJECT.md` is frozen.
 
-**Existing codebase.** When the repository already holds code, the planner explores before it asks you to decide anything:
+**Existing codebase.** When the repository already holds code, the planner explores via the aide before it asks you to decide anything:
 
-1. It reads the code, the tooling and CI configuration, the existing docs, and any contribution guide.
-2. It writes `SYSTEM.md` from what it found, and presents its understanding for you to correct.
-3. It then drafts `PROJECT.md` to scope the contribution, not the whole project. The architecture section records the system as it is and the changes planned. Each invariant cites the file or check that enforces it, and an invariant the planner inferred without such evidence is marked as inferred and confirmed by you.
+1. The aide reads the code, the tooling and CI configuration, the existing docs, and any contribution guide, returning a compact summary of structure, conventions, and entry points.
+2. The aide writes `SYSTEM.md` (with Mermaid diagrams) from what it found and seeds `MEMORY.md` / `memory/` only with non-obvious conventions or gotchas; the planner presents this understanding for you to correct.
+3. The planner then drafts `PROJECT.md` to scope the contribution, not the whole project. The architecture section records the system as it is and the changes planned. Each invariant cites the file or check that enforces it, and an invariant the planner inferred without such evidence is marked as inferred and confirmed by you.
 4. It records the repository's own conventions (branch and review flow, required checks) in `PROJECT.md` section 8, and the cycle follows them.
 
 ### 5.2 Decide (status: `PROPOSED`)
@@ -98,7 +102,7 @@ The planner has a plan that needs a decision before the coder runs. Read section
 
 ### 5.3 Review and direct (status: `CLOSED`, milestone met)
 
-The planner has met the milestone's acceptance criteria and presents the evidence. The changes are staged, ready for you to review and commit. It has reviewed the coder's work, rewritten `DEBRIEF.md` for the last cycle, appended every cycle's entry to `LOGS.md`, and brought `SYSTEM.md` up to date. Read the TL;DR of `DEBRIEF.md`, and the rest of it for the logic of what was built. For how the project got here, read `LOGS.md`. The planner also presents any decisions it needs and one to three candidate next milestones or cycles with a recommendation. To go deeper on anything, ask (6.5). Confirm the milestone (section 9), answer the decisions, and say what comes next: one of the candidates or your own direction, in your own terms. This opens the next plan (6.1).
+The planner has met the milestone's acceptance criteria and presents the evidence. The changes are staged, ready for you to review and commit. It has reviewed the coder's work, and the aide has rewritten `DEBRIEF.md` for the last cycle, appended every cycle's entry to `LOGS.md`, updated `MEMORY.md` / `memory/` for affected paths, and brought `SYSTEM.md` up to date. Read the TL;DR of `DEBRIEF.md`, and the rest of it for the logic of what was built. For how the project got here, read `LOGS.md`. The planner also presents any decisions it needs and one to three candidate next milestones or cycles with a recommendation. To go deeper on anything, ask (6.5). Confirm the milestone (section 9), answer the decisions, and say what comes next: one of the candidates or your own direction, in your own terms. Starting a fresh planner session for the next milestone is recommended to keep context lean (6.6). This opens the next plan (6.1).
 
 Between these points the planner interrupts you only for an escalation under section 8, presented as a question with options, consequences, and a recommendation. Starting the planner session with the opener in section 3 is mechanical and carries no decision.
 
@@ -108,11 +112,11 @@ On every invocation, read `TASKS.md` status and perform the matching move from s
 
 ### 6.1 Plan
 
-1. **Orient.** Read `PROJECT.md`, `SYSTEM.md`, `LATER.md`, `LOGS.md`, `DEBRIEF.md`, and the code the cycle will touch. If `LOGS.md` has no entries, establish the real implementation status from the repository before planning.
-2. **Align.** Name the roadmap milestone the cycle advances and the invariants it puts at stake. If the direction conflicts with `PROJECT.md`, serves no milestone, or builds something a later milestone will discard, say so and propose an alternative or an amendment. Never silently comply and never silently substitute.
-3. **Scope.** Combine the direction with every `LATER.md` item that is due (section 6.4). State what is excluded.
+1. **Orient.** Read `PROJECT.md`, `MEMORY.md` (and open only the `memory/` notes whose scope matches the cycle), `LATER.md`, and at most the last few entries of `LOGS.md`. Do not read `DEBRIEF.md` or `SYSTEM.md` during normal planning. When multiple source files must be inspected, launch the **aide** (read-only) to locate paths, signatures, and callers and return a compact summary, so raw files do not bloat planner context. If `LOGS.md` has no entries, establish the real implementation status from the repository before planning.
+2. **Align and think first.** Name the roadmap milestone the cycle advances and the invariants it puts at stake. State assumptions explicitly, surface multiple interpretations rather than picking silently, and push back when a simpler approach exists. Transform vague goals into verifiable acceptance criteria (for example, "add validation" becomes "tests for invalid inputs fail, then pass"). If the direction conflicts with `PROJECT.md`, serves no milestone, or builds something a later milestone will discard, say so and propose an alternative or an amendment. Never silently comply and never silently substitute.
+3. **Scope.** Combine the direction with every `LATER.md` item that is due (section 6.4). State what is excluded. Keep the design minimal: no speculative abstractions or unrequested configurability.
 4. **Verify.** Every path, signature, command, and behavior the plan relies on is checked against the repository or documentation, per `AGENT.md` hard rule 1. A plan built on an unverified fact is a defect.
-5. **Write** the content of `TASKS.md` sections 1 to 8 and reset sections 9 and 10 to their placeholders. Carry the `Coder` row of the header forward unchanged. Set `APPROVED` when the Brief requests no decision and the plan stays inside the direction's milestone and `PROJECT.md`. Otherwise set `PROPOSED`.
+5. **Write** the content of `TASKS.md` sections 1 to 8 and reset sections 9 and 10 to their placeholders. Carry the `Coder` and `Aide` rows of the header forward unchanged. Cite only the relevant `memory/` notes and reference code paths in section 3 so the coder stays in low context. Set `APPROVED` when the Brief requests no decision and the plan stays inside the direction's milestone and `PROJECT.md`. Otherwise set `PROPOSED`.
 6. **Present** the Brief to the human. At `APPROVED` it is informational and the planner continues. At `PROPOSED` the planner waits for the answer.
 
 A plan is ready when the coder can execute it without making a design decision: every file to touch is named, every public signature, type, error behavior, and data format is specified, every step has a test and a completion check, and each step leaves the repository passing its checks.
@@ -124,11 +128,11 @@ Trust the repository, not the Report.
 1. Read the full diff of the cycle: `git status --short` and `git diff` show the changes since the last close, and untracked files are read directly.
 2. Rerun every command in `TASKS.md` section 7.
 3. Check each acceptance criterion against evidence.
-4. Audit the diff against `AGENT.md` (scope, debris, comments, error handling, tests, docs), against the `PROJECT.md` invariants and definition of done, and against the fixed layout (section 2). Layout drift is a REWORK finding. Note every place where the code no longer matches `SYSTEM.md`.
+4. Audit the diff against `AGENT.md` (scope, debris, comments, error handling, tests, docs), against the `PROJECT.md` invariants and definition of done, and against the fixed layout (section 2). Apply the surgical diff test: every changed line must trace directly to the plan. Layout drift is a REWORK finding. Note any `SYSTEM.md` or `MEMORY.md` / `memory/` entries affected by the diff.
 5. Give every item in Report sections 9.3 to 9.7 a disposition: accepted, next cycle, `LATER.md` (with its new ID), rejected (with the reason), or escalated.
 6. Fill `TASKS.md` section 10.
 
-If every criterion is met and the audit is clean: update `LATER.md`, update `SYSTEM.md`, rewrite `DEBRIEF.md` and append the `LOGS.md` entry (6.5), stage the changes (section 10), set `CLOSED`, and then either plan the next cycle (6.1), or, when the direction's milestone is met, hand over to the human (5.3).
+If every criterion is met and the audit is clean: update `LATER.md`, launch the **aide** to update `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, and `MEMORY.md` / `memory/` (6.5) from the accepted diff and `TASKS.md`, sanity-check the aide's updates, stage the changes (section 10), set `CLOSED`, and then either plan the next cycle (6.1), or, when the direction's milestone is met, hand over to the human (5.3).
 
 Otherwise: append rework steps to `TASKS.md` section 6, increment `Revision`, and set `APPROVED`. Human approval is needed again only if the rework changes scope or design.
 
@@ -143,25 +147,27 @@ Read Report section 9.5. Correct the plan (the block is a plan defect unless pro
 - At each plan, re-rank the file and pull in what is due.
 - Resolved items are deleted. The `LOGS.md` entry records the resolution.
 
-### 6.5 Explain
+### 6.5 Explain and maintain memory
 
-The human must be able to understand the system quickly and to any depth, across many repositories. Four layers serve this, each written from the code and never from the plan or the Report alone.
+Human understanding and agent memory are separated so neither bloats the other. The aide maintains these files at cycle close from the accepted code and diff, never from the plan or the Report alone.
 
-- **`SYSTEM.md`** is the system design as built: components, interfaces, data, flows, runtime, and the decisions behind them. At every close, update each section the cycle affected and confirm the rest still matches the code. It describes only what exists. Anything stubbed or faked is listed in its last section, never presented as working. It is the architecture document `AGENT.md` section 8.5 refers to.
-- **`DEBRIEF.md`** explains the last closed cycle. After the review, replace its content with a TL;DR and a natural-language account of the logic that was implemented: what each part does, how the parts interact, and why. No code, and no restating of the checklist. The previous debrief is not kept, so anything later cycles must know is also recorded where it lasts: `SYSTEM.md`, a decision record, or `LOGS.md`.
+- **`SYSTEM.md`** is strictly for the human: a minimal, intuitive overview of the system as built. It uses required `mermaid` diagrams for the system map and key flows, a compact `Parts at a glance` table, and `Not real yet` for anything stubbed or faked. No dense technical specs or raw schemas.
+- **`MEMORY.md` and `memory/`** hold agent working memory: `MEMORY.md` is a compact catalog (`Note | Scope | Summary | Last verified`) pointing to `.md` notes inside `polaris/memory/` (which may use nested subdirectories). Only record what is non-obvious, cross-cutting, or costly to rediscover from code; never duplicate code. At cycle close, check only notes whose `Scope` overlaps the cycle's changed files, updating or deleting any that became stale.
+- **`DEBRIEF.md`** explains the last closed cycle for the human. After the review, replace its content with a TL;DR and a natural-language account of the logic that was implemented: what each part does, how the parts interact, and why. No code, and no restating of the checklist. The previous debrief is not kept, so anything later cycles must know is recorded in `MEMORY.md` / `memory/`, a decision record, or `LOGS.md`.
 - **`LOGS.md`** is the timeline of the project. At every close, append one entry of at most three bullets: what the cycle delivered, how it went (revisions and blocks, with the cause), and any milestone completed, amendment applied, or `LATER.md` item resolved. It says what happened, never how it works. Entries are never edited.
-- **Questions.** When the human asks to go deeper, answer from the code, starting from the paths `SYSTEM.md` gives, and cite the files the answer rests on. State what was not checked. If the answer reveals that `SYSTEM.md` is wrong or missing something, correct it at the next close.
+- **Questions.** When the human asks to go deeper, the aide answers from the code (starting from `SYSTEM.md` paths and `MEMORY.md`), citing the files the answer rests on and stating what was not checked. If the answer reveals that `SYSTEM.md` or a `memory/` note is wrong or missing something, correct it at the next close.
 
-All three files are written for a reader who has not seen the code and may not have opened this repository in weeks: define terms on first use, name components exactly as `SYSTEM.md` does, and lead with what matters.
+`SYSTEM.md`, `DEBRIEF.md`, and `LOGS.md` are written for a human reader who has not seen the code and may not have opened this repository in weeks: define terms on first use, name parts consistently with `SYSTEM.md`, and lead with what matters.
 
-### 6.6 Launch the coder
+### 6.6 Launch the coder and aide
 
-Whenever the status is `APPROVED`, the planner launches a coder.
+Both the **coder** (medium thinking / fast-mid model) and the **aide** (low thinking / cheap-fast model) are default roles in the loop.
 
-1. **Choose once.** The coder's tool (a native subagent, or a session of another tool that the planner can launch) and model are recorded in the `Coder` row of the `TASKS.md` header. The planner asks the human, with a recommendation, and waits, only when the row is blank, the recorded coder cannot be launched, or the human asks to switch. It then writes the answer to the row. An opener that names a coder sets the row without a question. Before launching a newly recorded coder, the planner confirms with a trivial check that it can be launched, and states the permission mode it will run with.
-2. **Launch fresh.** Each coder is a new subagent or headless session with empty context, never a fork, started in the project root, whose entire prompt is the planner-to-coder opener. Every launch is fresh, including after `BLOCKED` or rework, so the coder works from the written plan alone and no tokens are spent carrying earlier sessions. One coder runs at a time. If no coder can be launched from the planner's tool, the planner gives the human the planner-to-coder opener and waits. The human runs it in a fresh session of the recorded tool and model, and tells the planner when the status has changed. Every other rule here applies unchanged.
-3. **Act on the returned status.** `REPORTED`: review (6.2). `BLOCKED`: resolve (6.3). Rework or a corrected plan sets `APPROVED`, and the planner launches a new coder.
-4. **Stop and escalate** in the section 8 format when any of these holds:
+1. **Choose once.** Each role's tool (a native subagent, or a session of another tool that the planner can launch), model, and thinking level are recorded in the `Coder` and `Aide` rows of the `TASKS.md` header. The planner asks the human, with a recommendation, and waits, only when a row is blank, a recorded role cannot be launched, or the human asks to switch. It then writes the answer to the row. An opener that names a coder or aide sets the row without a question. Before launching a newly recorded role, the planner confirms with a trivial check that it can be launched, and states the permission mode it will run with.
+2. **Launch fresh.** Every coder and aide launch is a new subagent or headless session with empty context, never a fork, started in the project root. Every launch is fresh, including after `BLOCKED` or rework, so no tokens are spent carrying earlier sessions. One coder runs at a time. If no subagent or external tool can be launched from the planner's tool, the planner gives the human the corresponding opener from section 3 and waits.
+3. **Planner context hygiene.** The planner runs continuously across cycles within a milestone (preserving autonomy and prompt-cache reuse) while offloading heavy exploration, execution, and close-doc writing to fresh aide and coder sessions. Start a fresh planner session at each milestone boundary (or compact context if a single milestone exceeds about four to five cycles).
+4. **Act on the returned coder status.** `REPORTED`: review (6.2). `BLOCKED`: resolve (6.3). Rework or a corrected plan sets `APPROVED`, and the planner launches a new coder.
+5. **Stop and escalate** in the section 8 format when any of these holds:
    - Section 8 requires it, in particular an amendment to `PROJECT.md` or a change to the layout of the files.
    - Resolving a block or rework would change what the approved Brief promised (its What or Result), not only how the cycle gets there.
    - The same block cause occurs twice in a cycle, or `Revision` would exceed 5.
@@ -174,9 +180,9 @@ The planner writes no production code, even to get past a block: a defect found 
 
 ### 7.1 Execute
 
-1. Read `AGENT.md`, `PROJECT.md`, and `TASKS.md`. If status is not `APPROVED` or `IN_PROGRESS`, stop and say so.
+1. Read `AGENT.md`, `TASKS.md`, section 7 of this file, and only the code files and `memory/` notes named in `TASKS.md`. Do not read `PROJECT.md` or `SYSTEM.md` unless `TASKS.md` cites a specific section. If status is not `APPROVED` or `IN_PROGRESS`, stop and say so.
 2. Set `IN_PROGRESS`.
-3. Perform the steps in order. After each step, run its check and tick its box. Do not start a step while the previous one fails its check.
+3. Perform the steps in order. For each step, loop until its check passes (stopping under 7.3 if the same failure persists after two distinct attempts), then tick its box. Do not start a step while the previous one fails its check.
 4. Run everything in `TASKS.md` section 7 and in `AGENT.md` section 9.
 5. Fill the Report (section 9 of `TASKS.md`), completely and factually. An empty subsection is written as `None`. Set `REPORTED`. Do not commit.
 
@@ -202,7 +208,7 @@ On any of these, write the situation and what was tried in Report section 9.5, s
 
 ### 7.4 Never
 
-- Edit `TASKS.md` sections 1 to 8 or 10, or `PROJECT.md`, `LATER.md`, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `AGENT.md`, `POLARIS.md`.
+- Edit `TASKS.md` sections 1 to 8 or 10, or `PROJECT.md`, `LATER.md`, `MEMORY.md`, `memory/`, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `AGENT.md`, `POLARIS.md`.
 - Act on an observation outside the plan. Record it in Report section 9.6.
 - Delete, weaken, or skip a check to reach `REPORTED`.
 
@@ -227,8 +233,8 @@ When the planner judges a milestone's acceptance criteria met, it presents the e
 ## 10. Version control
 
 - No agent commits, pushes, resets, or otherwise changes git history. Committing is the human's.
-- A milestone starts from a clean working tree. If it is not clean when the planner begins, the planner asks the human to commit first.
-- The planner stages the working tree (`git add -A`) once per closed cycle, after a clean audit, so the next cycle's `git diff` shows only that cycle's changes. It stages nothing at any other time and never unstages or discards changes. The coder runs no git command that changes state.
+- A milestone starts from a clean working tree, except when the repository has no commits yet or when the only uncommitted change is adding `polaris/` to `.gitignore` (which rides along into the first milestone commit). Otherwise, if the working tree is not clean when the planner begins, the planner asks the human to commit first.
+- The planner stages the working tree (`git add -A`) once per closed cycle, after a clean audit, so the next cycle's `git diff` shows only that cycle's changes. It stages nothing at any other time and never unstages or discards changes. Neither the coder nor the aide runs any git command that changes state.
 - When the milestone is met, the changes are staged and the human reviews them with `git status` and commits.
 - Nothing in `polaris/` is ever committed. Its files are the working state of the loop, and the history of past cycles is `LOGS.md`.
 - A `TODO` in code cites a `LATER.md` ID. This satisfies the issue-link requirement in `AGENT.md` section 4.5.
