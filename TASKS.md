@@ -30,6 +30,7 @@
 - **Invariants at stake:** <IDs from PROJECT.md section 5, and how the plan protects each>
 - **LATER items addressed:** <IDs, or `None`>
 - **Memory to read:** <paths under `polaris/memory/` relevant to this cycle, or `None`>
+- **Skills to read:** <paths under `polaris/skills/` relevant to this cycle, or `None`>
 - **Existing code to follow:** <paths of the nearest similar code and its tests>
 
 ## 4. Scope

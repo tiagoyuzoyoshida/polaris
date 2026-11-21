@@ -43,6 +43,7 @@ The planner asks which tool, model, and thinking level to use for the **coder** 
 |---|---|
 | `POLARIS.md` | The rules of the workflow: who does what, in which order, and when the planner must stop and ask you. |
 | `AGENT.md` | The engineering standards every coder follows when writing code: design, tests, comments, and what counts as done. |
+| `SKILLS.md` | Agent skill catalog indexing `polaris/skills/`: workflow skills (writing, diagrams, updating Polaris) and reusable domain skills loaded only when relevant. |
 | `PROJECT.md` | The agreement you approve at the start: what the project is for, its architecture, the rules every change must respect, and the roadmap of milestones. |
 | `TASKS.md` | The cycle in progress: the plan the coder follows, its report, and the planner's review. Its status says whose move it is. |
 | `LATER.md` | The backlog: problems, ideas and open questions found along the way that are not part of the current cycle, in priority order. |
@@ -51,7 +52,7 @@ The planner asks which tool, model, and thinking level to use for the **coder** 
 | `DEBRIEF.md` | What the last cycle did and why, in plain language, with a TL;DR first. Read this after a cycle. |
 | `LOGS.md` | A short timeline of every cycle: what each delivered and how smoothly it went. Read this to see how the project progressed. |
 
-`POLARIS.md` and `AGENT.md` are Polaris itself. The other seven files (and `memory/` as it grows) are specific to your project, and the loop fills them in as it goes.
+`POLARIS.md`, `AGENT.md`, `SKILLS.md`, and `skills/` are Polaris itself. The other seven files (and `memory/` as it grows) are specific to your project, and the loop fills them in as it goes.
 
 ## License
 

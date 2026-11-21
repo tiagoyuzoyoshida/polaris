@@ -19,6 +19,7 @@ A decision that reaches a level below the one it belongs to is a defect in the p
 |---|---|---|---|
 | `POLARIS.md` | This loop | Human | Kit, identical in every project |
 | `AGENT.md` | Engineering rules | Human | Kit, identical in every project |
+| `SKILLS.md` | Agent skill catalog: index of `polaris/skills/` | Human | Kit, identical in every project |
 | `PROJECT.md` | Direction: purpose, architecture, invariants, roadmap | Planner drafts, human approves | Frozen, changed only by amendment (section 9) |
 | `TASKS.md` | Present: the current cycle's plan, checklist, report, review | Planner (plan, review), coder (checkboxes, report, status) | Rewritten every cycle |
 | `LATER.md` | Future: prioritized backlog | Planner | Living |
@@ -29,9 +30,9 @@ A decision that reaches a level below the one it belongs to is a defect in the p
 
 The section headings of `PROJECT.md`, `TASKS.md`, `LATER.md`, `MEMORY.md`, `SYSTEM.md`, and `DEBRIEF.md`, and the entry format of `LOGS.md`, are fixed and identical in every project. Only the content under them changes. Text in `<angle brackets>` is a placeholder for content not yet written. A fact lives in exactly one file.
 
-**Location.** The kit is a clone of its repository in the directory `polaris/` at the root of the project repository. Every bare file name in these files, `AGENT.md` included, means that file inside `polaris/`. A path such as `docs/` or `src/` is relative to the project root. `polaris/` is listed in the project's `.gitignore`, so no loop file enters the project's history (section 10).
+**Location.** The kit is a clone of its repository in the directory `polaris/` at the root of the project repository. Every bare file name in these files, `AGENT.md` and `SKILLS.md` included, means that file inside `polaris/`. A path such as `docs/` or `src/` is relative to the project root. `polaris/` is listed in the project's `.gitignore`, so no loop file enters the project's history (section 10).
 
-The layout is part of the loop. No agent adds, removes, renames, moves, or reorders any of these nine files or any of their headings, and no agent edits `POLARIS.md` or `AGENT.md` at all. The sole exception is `polaris/memory/`, which starts empty (created on first write) and where the aide or planner may freely create, organize into nested subdirectories, update, and prune `.md` notes indexed by `MEMORY.md`. A layout that seems inadequate is raised with the human as an escalation, never worked around. The kit's repository holds the pristine files, and a damaged layout is restored from it with git.
+The layout is part of the loop. No agent adds, removes, renames, moves, or reorders any of these ten files or any of their headings, and no agent edits `POLARIS.md`, `AGENT.md`, `SKILLS.md`, or `skills/` at all. The two exceptions are: `polaris/memory/`, which starts empty (created on first write) and where the aide or planner may freely create, organize into nested subdirectories, update, and prune `.md` notes indexed by `MEMORY.md`; and replacing the kit when the human explicitly asks to update Polaris (`skills/update-polaris.md`). A layout that seems inadequate is raised with the human as an escalation, never worked around. The kit's repository holds the pristine files, and a damaged layout is restored from it with git.
 
 Precedence when files conflict: `AGENT.md` hard rules, then `PROJECT.md`, then `TASKS.md`, then `AGENT.md` defaults. A conflict between `TASKS.md` and anything above it is a stop condition (section 7.3), never a judgment call.
 
@@ -40,9 +41,9 @@ Precedence when files conflict: `AGENT.md` hard rules, then `PROJECT.md`, then `
 | Role | Runs on | Reads | Produces |
 |---|---|---|---|
 | Human | n/a | `PROJECT.md`, the Brief in `TASKS.md`, `DEBRIEF.md`, `LOGS.md`, `SYSTEM.md` | `PROJECT.md`, approvals, direction |
-| Planner | Capable model, medium–high thinking | `PROJECT.md`, `MEMORY.md` (+ only scope-matching notes in `memory/`), `LATER.md`, recent `LOGS.md` entries, `TASKS.md`, diffs and targeted code | Plans, reviews, `LATER.md` |
-| Coder | Fast/mid model, medium thinking | `AGENT.md`, `TASKS.md`, section 7 of this file, and only the code and `memory/` notes named in `TASKS.md` | Code, tests, docs, the Report |
-| Aide | Cheap/fast model, low thinking | Codebase and loop files as directed by the planner | Compact exploration summaries, deep-dive answers, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `MEMORY.md`, `memory/` notes |
+| Planner | Capable model, medium–high thinking | `PROJECT.md`, `MEMORY.md` (+ only scope-matching notes in `memory/`), `SKILLS.md` (+ only matching skills in `skills/`), `LATER.md`, recent `LOGS.md` entries, `TASKS.md`, diffs and targeted code | Plans, reviews, `LATER.md` |
+| Coder | Fast/mid model, medium thinking | `AGENT.md`, `TASKS.md`, section 7 of this file, and only the code, `memory/` notes, and `skills/` files named in `TASKS.md` | Code, tests, docs, the Report |
+| Aide | Cheap/fast model, low thinking | Codebase, loop files, and required workflow skills as directed by the planner | Compact exploration summaries, deep-dive answers, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `MEMORY.md`, `memory/` notes |
 
 The planner writes no production code. The coder writes no plans. The aide writes no production code, plans, or review verdicts. Both the coder and the aide are launched as fresh sessions (6.6) so neither carries stale context and heavy reading never bloats the planner's context.
 
@@ -92,7 +93,7 @@ The planner opens by asking what you want to implement. Describe it, or what you
 **Existing codebase.** When the repository already holds code, the planner explores via the aide before it asks you to decide anything:
 
 1. The aide reads the code, the tooling and CI configuration, the existing docs, and any contribution guide, returning a compact summary of structure, conventions, and entry points.
-2. The aide writes `SYSTEM.md` (with Mermaid diagrams) from what it found and seeds `MEMORY.md` / `memory/` only with non-obvious conventions or gotchas; the planner presents this understanding for you to correct.
+2. The aide writes `SYSTEM.md` (following `skills/writing.md` and `skills/diagrams.md`) from what it found and seeds `MEMORY.md` / `memory/` only with non-obvious conventions or gotchas; the planner presents this understanding for you to correct.
 3. The planner then drafts `PROJECT.md` to scope the contribution, not the whole project. The architecture section records the system as it is and the changes planned. Each invariant cites the file or check that enforces it, and an invariant the planner inferred without such evidence is marked as inferred and confirmed by you.
 4. It records the repository's own conventions (branch and review flow, required checks) in `PROJECT.md` section 8, and the cycle follows them.
 
@@ -112,11 +113,11 @@ On every invocation, read `TASKS.md` status and perform the matching move from s
 
 ### 6.1 Plan
 
-1. **Orient.** Read `PROJECT.md`, `MEMORY.md` (and open only the `memory/` notes whose scope matches the cycle), `LATER.md`, and at most the last few entries of `LOGS.md`. Do not read `DEBRIEF.md` or `SYSTEM.md` during normal planning. When multiple source files must be inspected, launch the **aide** (read-only) to locate paths, signatures, and callers and return a compact summary, so raw files do not bloat planner context. If `LOGS.md` has no entries, establish the real implementation status from the repository before planning.
+1. **Orient.** Read `PROJECT.md`, `MEMORY.md` (and open only the `memory/` notes whose scope matches the cycle), `SKILLS.md` (and open only the `skills/` files whose trigger matches the cycle), `LATER.md`, and at most the last few entries of `LOGS.md`. Do not read `DEBRIEF.md` or `SYSTEM.md` during normal planning. When multiple source files must be inspected, launch the **aide** (read-only) to locate paths, signatures, and callers and return a compact summary, so raw files do not bloat planner context. If `LOGS.md` has no entries, establish the real implementation status from the repository before planning.
 2. **Align and think first.** Name the roadmap milestone the cycle advances and the invariants it puts at stake. State assumptions explicitly, surface multiple interpretations rather than picking silently, and push back when a simpler approach exists. Transform vague goals into verifiable acceptance criteria (for example, "add validation" becomes "tests for invalid inputs fail, then pass"). If the direction conflicts with `PROJECT.md`, serves no milestone, or builds something a later milestone will discard, say so and propose an alternative or an amendment. Never silently comply and never silently substitute.
 3. **Scope.** Combine the direction with every `LATER.md` item that is due (section 6.4). State what is excluded. Keep the design minimal: no speculative abstractions or unrequested configurability.
 4. **Verify.** Every path, signature, command, and behavior the plan relies on is checked against the repository or documentation, per `AGENT.md` hard rule 1. A plan built on an unverified fact is a defect.
-5. **Write** the content of `TASKS.md` sections 1 to 8 and reset sections 9 and 10 to their placeholders. Carry the `Coder` and `Aide` rows of the header forward unchanged. Cite only the relevant `memory/` notes and reference code paths in section 3 so the coder stays in low context. Set `APPROVED` when the Brief requests no decision and the plan stays inside the direction's milestone and `PROJECT.md`. Otherwise set `PROPOSED`.
+5. **Write** the content of `TASKS.md` sections 1 to 8 and reset sections 9 and 10 to their placeholders. Carry the `Coder` and `Aide` rows of the header forward unchanged. Cite only the relevant `memory/` notes, `skills/` files (including `skills/writing.md` when the cycle writes or updates `README.md` or human-facing docs, and `skills/diagrams.md` when it includes diagrams), and reference code paths in section 3 so the coder stays in low context. Set `APPROVED` when the Brief requests no decision and the plan stays inside the direction's milestone and `PROJECT.md`. Otherwise set `PROPOSED`.
 6. **Present** the Brief to the human. At `APPROVED` it is informational and the planner continues. At `PROPOSED` the planner waits for the answer.
 
 A plan is ready when the coder can execute it without making a design decision: every file to touch is named, every public signature, type, error behavior, and data format is specified, every step has a test and a completion check, and each step leaves the repository passing its checks.
@@ -128,7 +129,7 @@ Trust the repository, not the Report.
 1. Read the full diff of the cycle: `git status --short` and `git diff` show the changes since the last close, and untracked files are read directly.
 2. Rerun every command in `TASKS.md` section 7.
 3. Check each acceptance criterion against evidence.
-4. Audit the diff against `AGENT.md` (scope, debris, comments, error handling, tests, docs), against the `PROJECT.md` invariants and definition of done, and against the fixed layout (section 2). Apply the surgical diff test: every changed line must trace directly to the plan. Layout drift is a REWORK finding. Note any `SYSTEM.md` or `MEMORY.md` / `memory/` entries affected by the diff.
+4. Audit the diff against `AGENT.md` (scope, debris, comments, error handling, tests, docs), against the `PROJECT.md` invariants and definition of done, against any `skills/` cited in `TASKS.md`, and against the fixed layout (section 2). Apply the surgical diff test: every changed line must trace directly to the plan. Layout drift is a REWORK finding. Note any `SYSTEM.md` or `MEMORY.md` / `memory/` entries affected by the diff.
 5. Give every item in Report sections 9.3 to 9.7 a disposition: accepted, next cycle, `LATER.md` (with its new ID), rejected (with the reason), or escalated.
 6. Fill `TASKS.md` section 10.
 
@@ -149,7 +150,7 @@ Read Report section 9.5. Correct the plan (the block is a plan defect unless pro
 
 ### 6.5 Explain and maintain memory
 
-Human understanding and agent memory are separated so neither bloats the other. The aide maintains these files at cycle close from the accepted code and diff, never from the plan or the Report alone.
+Human understanding and agent memory are separated so neither bloats the other. The aide maintains these files at cycle close from the accepted code and diff, never from the plan or the Report alone. When writing or updating `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, or deep-dive answers, the aide reads and follows `skills/writing.md`, and reads and follows `skills/diagrams.md` for `SYSTEM.md` and any visual explanation.
 
 - **`SYSTEM.md`** is strictly for the human: a minimal, intuitive overview of the system as built. It uses required `mermaid` diagrams for the system map and key flows, a compact `Parts at a glance` table, and `Not real yet` for anything stubbed or faked. No dense technical specs or raw schemas.
 - **`MEMORY.md` and `memory/`** hold agent working memory: `MEMORY.md` is a compact catalog (`Note | Scope | Summary | Last verified`) pointing to `.md` notes inside `polaris/memory/` (which may use nested subdirectories). Only record what is non-obvious, cross-cutting, or costly to rediscover from code; never duplicate code. At cycle close, check only notes whose `Scope` overlaps the cycle's changed files, updating or deleting any that became stale.
@@ -180,7 +181,7 @@ The planner writes no production code, even to get past a block: a defect found 
 
 ### 7.1 Execute
 
-1. Read `AGENT.md`, `TASKS.md`, section 7 of this file, and only the code files and `memory/` notes named in `TASKS.md`. Do not read `PROJECT.md` or `SYSTEM.md` unless `TASKS.md` cites a specific section. If status is not `APPROVED` or `IN_PROGRESS`, stop and say so.
+1. Read `AGENT.md`, `TASKS.md`, section 7 of this file, and only the code files, `memory/` notes, and `skills/` files named in `TASKS.md`. Do not read `PROJECT.md` or `SYSTEM.md` unless `TASKS.md` cites a specific section. If status is not `APPROVED` or `IN_PROGRESS`, stop and say so.
 2. Set `IN_PROGRESS`.
 3. Perform the steps in order. For each step, loop until its check passes (stopping under 7.3 if the same failure persists after two distinct attempts), then tick its box. Do not start a step while the previous one fails its check.
 4. Run everything in `TASKS.md` section 7 and in `AGENT.md` section 9.
@@ -208,7 +209,7 @@ On any of these, write the situation and what was tried in Report section 9.5, s
 
 ### 7.4 Never
 
-- Edit `TASKS.md` sections 1 to 8 or 10, or `PROJECT.md`, `LATER.md`, `MEMORY.md`, `memory/`, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `AGENT.md`, `POLARIS.md`.
+- Edit `TASKS.md` sections 1 to 8 or 10, or `PROJECT.md`, `LATER.md`, `MEMORY.md`, `memory/`, `SYSTEM.md`, `DEBRIEF.md`, `LOGS.md`, `AGENT.md`, `POLARIS.md`, `SKILLS.md`, `skills/`.
 - Act on an observation outside the plan. Record it in Report section 9.6.
 - Delete, weaken, or skip a check to reach `REPORTED`.
 
@@ -251,3 +252,5 @@ The human then opens a planner session. Before the loop begins at 5.1, the plann
 
 1. If the project is not a git repository, ask the human to run `git init` and wait.
 2. Add `polaris/` to the project's `.gitignore`, creating the file if needed, and confirm with `git check-ignore polaris/`.
+
+**Updating Polaris.** When the human explicitly asks to update `polaris/`, the planner reads and follows `skills/update-polaris.md`.
